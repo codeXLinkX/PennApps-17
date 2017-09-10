@@ -9,18 +9,21 @@ def predict(x, y):
 
     regr = linear_model.LinearRegression()
     regr.fit(x, y)
-    preds = regr.predict(x)
-    pickle.dump(regr, open('model', 'wb'))
-    model = pickle.load(open('model', 'rb'))
-    y_pred = model.predict(x)
-    print("Predictions")
-    print(y_pred)
+    if len(sys.argv) > 3:
+        file = sys.argv[3]
+    else:
+        file = 'model'
+    pickle.dump(regr, open(file, 'wb'))
+    # model = pickle.load(open('model', 'rb'))
+    # y_pred = model.predict(x)
+    # print("Predictions")
+    # print(y_pred)
 
-def main():
+def read_file(arg):
 
-    args = len(sys.argv)
+    args = len(arg)
 
-    if(args > 1):
+    if (args > 1):
         file_name = sys.argv[1]
     else:
         file_name = 'data.csv'
@@ -33,9 +36,15 @@ def main():
         feature_count = len(data.columns)
 
     x = data[data.columns[0:feature_count]]
-    print(x)
     y = data[data.columns[feature_count:]]
-    print(y)
+
+    return x, y
+
+
+def main():
+
+    x, y = read_file(sys.argv)
+
     predict(x, y)
 
 
